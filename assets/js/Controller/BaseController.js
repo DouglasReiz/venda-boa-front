@@ -1,12 +1,11 @@
+import { renderNavbar } from '../components/navbar.js';
+
 /**
  * BaseController
  *
- * Princípio SOLID aplicado:
- *  - SRP: centraliza apenas o comportamento compartilhado entre controllers
- *         (logout e tratamento de sessão expirada).
- *  - DRY: elimina a duplicação do bloco #sessaoExpirada que existia no
- *         UIController original e seria copiado em cada novo controller.
- *  - OCP: subclasses estendem sem precisar reescrever o tratamento de auth.
+ * - Centraliza logout e tratamento de sessão expirada (SRP)
+ * - Renderiza a navbar automaticamente em todos os controllers filhos (DRY)
+ *   Basta chamar this.montarNavbar() no início de qualquer bind method.
  */
 export class BaseController {
     #auth;
@@ -15,19 +14,24 @@ export class BaseController {
         this.#auth = auth;
     }
 
+    /**
+     * Renderiza a navbar com o nome do usuário logado.
+     * Deve ser chamado no início de cada método de bind das telas protegidas.
+     */
+    montarNavbar() {
+        renderNavbar(this.#auth, () => this.logout());
+    }
+
     logout() {
         this.#auth.logout();
         window.router.navigate('/login');
     }
 
-    // Chamado em qualquer catch que receba UnauthorizedError
     sessaoExpirada() {
         alert('Sessão expirada. Faça login novamente.');
         this.logout();
     }
 
-    // Atalho para verificar o tipo do erro e redirecionar se necessário.
-    // Retorna true se o erro foi tratado (o caller pode usar para early return).
     tratarErroAuth(e) {
         if (e.name === 'UnauthorizedError') {
             this.sessaoExpirada();

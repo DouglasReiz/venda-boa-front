@@ -3,12 +3,11 @@ import { BaseController } from './BaseController.js';
 /**
  * CheckoutPanelController
  *
- * Princípios SOLID aplicados:
- *  - SRP: responsável apenas pelo painel de movimentações (entradas, saídas,
- *         histórico e navegação para finalização). Não sabe como se abre ou
- *         fecha um caixa administrativamente.
- *  - DIP: depende de CheckoutService e AuthService injetados.
- *  - ISP: expõe apenas o método público necessário para a rota (bindCheckoutOperations).
+ * SRP: gerencia apenas o painel de movimentações do turno ativo.
+ *
+ * Dois fluxos de saída distintos:
+ *  - "Fechar Caixa"    → /checkout/fechar   (encerra o turno do operador)
+ *  - "Finalizar Venda" → /checkout/pagamento (processa uma venda e volta para nova venda)
  */
 export class CheckoutPanelController extends BaseController {
     #checkout;
@@ -18,22 +17,35 @@ export class CheckoutPanelController extends BaseController {
         this.#checkout = checkout;
     }
 
-    // Ponto de entrada chamado pela rota após o HTML ser injetado
     async bindCheckoutOperations() {
+        this.montarNavbar();
         this.#bindBotoes();
         await this.#carregarHistorico();
     }
 
-    #bindBotoes() {
-        const btnFechar       = document.getElementById('btn-fechar-caixa');
-        const btnEntrada      = document.getElementById('btn-entrada');
-        const btnSaida        = document.getElementById('btn-saida');
-        const btnLogout       = document.getElementById('btn-logout');
-        const btnIrFinalizar  = document.getElementById('btn-ir-finalizar');
+    // ── Privados ──────────────────────────────────────────────────────────────
 
-        if (btnFechar)      btnFechar.addEventListener('click', () => this.#fecharCaixa());
-        if (btnLogout)      btnLogout.addEventListener('click', () => this.logout());
-        if (btnIrFinalizar) btnIrFinalizar.addEventListener('click', () => this.#irParaFinalizacao());
+    #bindBotoes() {
+        const btnFecharCaixa    = document.getElementById('btn-fechar-caixa');
+        const btnFinalizarVenda = document.getElementById('btn-ir-finalizar');
+        const btnEntrada        = document.getElementById('btn-entrada');
+        const btnSaida          = document.getElementById('btn-saida');
+
+        // Encerra o turno — vai para a tela de resumo/fechamento
+        if (btnFecharCaixa) {
+            btnFecharCaixa.addEventListener('click', () => {
+                window.router.navigate('/checkout/fechar');
+            });
+        }
+
+        // Finaliza uma venda — calcula total, salva no serviço e vai para pagamento
+        if (btnFinalizarVenda) {
+            btnFinalizarVenda.addEventListener('click', () => {
+                const total = this.#checkout.calcularTotal();
+                this.#checkout.setValorVenda(total);
+                window.router.navigate('/checkout/pagamento');
+            });
+        }
 
         if (btnEntrada) {
             btnEntrada.addEventListener('click', async () => {
@@ -46,39 +58,16 @@ export class CheckoutPanelController extends BaseController {
                 await this.#registrarMovimentacao('saida');
             });
         }
-    }
 
-    async #fecharCaixa() {
-        const btn = document.getElementById('btn-fechar-caixa');
-        btn.disabled  = true;
-        btn.innerText = 'Processando...';
-
-        try {
-            const data = await this.#checkout.fechar();
-            alert('Caixa fechado! Saldo final: ' + data.summary.final_balance);
-            window.router.navigate('/checkout/abrir');
-        } catch (e) {
-            if (this.tratarErroAuth(e)) return;
-            alert('Erro ao fechar caixa: ' + e.message);
-        } finally {
-            btn.disabled  = false;
-            btn.innerText = 'Fechar Caixa';
-        }
     }
 
     async #registrarMovimentacao(tipo) {
-        const valor    = parseFloat(document.getElementById('valor')?.value);
+        const valor     = parseFloat(document.getElementById('valor')?.value);
         const descricao = document.getElementById('descricao')?.value;
 
         this.#checkout.adicionarMovimentacao(tipo, valor, descricao);
         await this.#checkout.lancar(tipo, valor, descricao);
         await this.#carregarHistorico();
-    }
-
-    #irParaFinalizacao() {
-        const total = this.#checkout.calcularTotal();
-        this.#checkout.setValorVenda(total);
-        window.router.navigate('/checkout/finalizar');
     }
 
     async #carregarHistorico() {

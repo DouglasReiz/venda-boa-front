@@ -1,44 +1,88 @@
 export class CheckoutService {
     #api;
-    #movimentacoes = []; // Guarda a lista localmente
-    #valorVenda = 0;
+    #movimentacoes   = [];
+    #valorVenda      = 0;
+    #vendaFinalizada = false;
 
     constructor(api) {
         this.#api = api;
     }
 
-    // Método para calcular o total com base nas movimentações do caixa
+    // ── Cálculo local ─────────────────────────────────────────────────────────
+
     calcularTotal() {
-        // Exemplo: soma entradas e subtrai saídas
         return this.#movimentacoes.reduce((acc, mov) => {
             return mov.tipo === 'entrada' ? acc + mov.valor : acc - mov.valor;
         }, 0);
     }
 
-    setValorVenda(valor) {
-        this.#valorVenda = valor;
-    }
-
-    getValorVenda() {
-        return this.#valorVenda;
-    }
-
-    // Adicione esta lógica para manter o histórico local atualizado
     adicionarMovimentacao(tipo, valor, descricao) {
+        this.#vendaFinalizada = false;
         this.#movimentacoes.push({ tipo, valor: parseFloat(valor), descricao });
     }
 
-    // Adicione este método para finalizar a venda na API
-    async finalizarCompra(valor, metodoPagamento) {
-        // Usamos o método .post() que seu ApiClient já possui
-        return await this.#api.post('/checkout/finalizar-venda', {
-            valor: valor,
-            metodo_pagamento: metodoPagamento
+    // ── Estado da venda ───────────────────────────────────────────────────────
+
+    setValorVenda(valor) { this.#valorVenda = valor; }
+    getValorVenda()      { return this.#valorVenda; }
+
+    resetarVenda() {
+        this.#movimentacoes  = [];
+        this.#valorVenda     = 0;
+        this.#vendaFinalizada = true;
+    }
+
+    // ── API ───────────────────────────────────────────────────────────────────
+
+    abrir(valor) {
+        return this.#api.post('/checkout/open', { valor_abertura: valor });
+    }
+
+    fechar() {
+        return this.#api.post('/checkout/close');
+    }
+
+    lancar(tipo, valor, desc) {
+        return this.#api.post('/checkout/launch', {
+            tipo,
+            valor,
+            descricao:        desc,
+            metodo_pagamento: 'dinheiro',
         });
     }
 
-    abrir(valor) { return this.#api.post('/checkout/open', { valor_abertura: valor }); }
-    fechar() { return this.#api.post('/checkout/close'); }
-    lancar(tipo, valor, desc) { return this.#api.post('/checkout/launch', { tipo, valor, descricao: desc, metodo_pagamento: 'dinheiro' }); }
-    getHistorico() { return this.#api.get('/checkout/history'); }
+    /**
+     * Usado no painel de movimentações.
+     * Retorna [] após resetarVenda() para zerar o histórico visual da venda anterior.
+     */
+    async getHistorico() {
+        if (this.#vendaFinalizada) return [];
+        return this.#api.get('/checkout/history');
+    }
+
+    /**
+     * Usado na tela de fechamento.
+     * Ignora a flag #vendaFinalizada — precisa de TODAS as transações do turno.
+     */
+    getHistoricoCompleto() {
+        return this.#api.get('/checkout/history');
+    }
+
+    /**
+     * Busca o checkout aberto e retorna o valor_abertura.
+     * Usado para calcular o saldo final na tela de fechamento.
+     */
+    async getValorAbertura() {
+        const checkouts = await this.#api.get('/admin/caixas-abertos');
+        const meu = Array.isArray(checkouts) ? checkouts[0] : null;
+        return parseFloat(meu?.valor_abertura ?? 0);
+    }
+
+    finalizarCompra(valor, metodoPagamento, parcelas = 1) {
+        return this.#api.post('/checkout/finalizar-venda', {
+            valor,
+            metodo_pagamento: metodoPagamento,
+            parcelas,
+        });
+    }
 }

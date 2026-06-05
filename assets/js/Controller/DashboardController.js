@@ -1,20 +1,23 @@
-// Controller/DashboardController.js
-export class DashboardController {
+import { BaseController } from './BaseController.js';
+
+export class DashboardController extends BaseController {
     #caixaAdmin;
     #grafico;
 
-    constructor(caixaAdminService, graficoService) {
+    constructor(auth, caixaAdminService, graficoService) {
+        super(auth);
         this.#caixaAdmin = caixaAdminService;
         this.#grafico = graficoService;
     }
 
     async init() {
+        this.montarNavbar();
         try {
             await this.#renderCaixas();
             this.#bindBotoesFechamento();
             await this.#renderGrafico();
         } catch (error) {
-            console.error("Erro ao inicializar Dashboard:", error);
+            console.error('Erro ao inicializar Dashboard:', error);
         }
     }
 
@@ -26,24 +29,26 @@ export class DashboardController {
             const caixas = await this.#caixaAdmin.getCaixasAbertos();
 
             if (caixas.length === 0) {
-                container.innerHTML = '<p style="color: #cbd5e0;">Nenhum caixa aberto no momento.</p>';
+                container.innerHTML = '<p style="color: rgba(255,255,255,0.4);">Nenhum caixa aberto no momento.</p>';
                 return;
             }
 
             container.innerHTML = caixas.map(c => `
-                <div class="caixa-item" style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:rgba(255,255,255,0.05);margin-bottom:8px;border-radius:8px;">
+                <div class="caixa-item">
                     <div>
                         <strong>Caixa #${c.id}</strong><br>
-                        <small style="color:#cbd5e0;">Operador: ${c.user?.name ?? 'Não identificado'}</small>
+                        <small style="color:rgba(255,255,255,0.5);">
+                            Operador: ${c.user?.name ?? 'Não identificado'}
+                        </small>
                     </div>
                     <button data-id="${c.id}" class="btn-fechar-admin btn btn-fechar"
-                        style="background:#f56565;color:white;border:none;padding:6px 12px;border-radius:6px;cursor:pointer;">
+                        style="width:auto;padding:6px 14px;font-size:13px;">
                         Fechar
                     </button>
                 </div>
             `).join('');
         } catch {
-            container.innerHTML = '<p style="color:#f56565;">Erro ao carregar caixas.</p>';
+            container.innerHTML = '<p style="color: var(--color-danger);">Erro ao carregar caixas.</p>';
         }
     }
 
@@ -51,14 +56,13 @@ export class DashboardController {
         document.querySelectorAll('.btn-fechar-admin').forEach(btn => {
             btn.addEventListener('click', e => {
                 const id = e.currentTarget.getAttribute('data-id');
-                this.#fecharCaixa(id);
+                this.#fecharCaixaAdmin(id);
             });
         });
     }
 
-    async #fecharCaixa(caixaId) {
+    async #fecharCaixaAdmin(caixaId) {
         if (!confirm(`Deseja realmente forçar o fechamento do caixa #${caixaId}?`)) return;
-
         try {
             await this.#caixaAdmin.fecharCaixa(caixaId);
             alert('Caixa fechado com sucesso!');
@@ -88,7 +92,7 @@ export class DashboardController {
                         borderColor: '#48bb78',
                         backgroundColor: 'rgba(72,187,120,0.1)',
                         tension: 0.4,
-                        fill: true
+                        fill: true,
                     }]
                 },
                 options: {
@@ -96,12 +100,12 @@ export class DashboardController {
                     plugins: { legend: { labels: { color: 'white' } } },
                     scales: {
                         x: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: 'white' } },
-                        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: 'white' } }
+                        y: { grid: { color: 'rgba(255,255,255,0.1)' }, ticks: { color: 'white' } },
                     }
                 }
             });
         } catch (error) {
-            console.error("Erro ao carregar gráfico:", error);
+            console.error('Erro ao carregar gráfico:', error);
         }
     }
 }
