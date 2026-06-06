@@ -1,60 +1,53 @@
 /* ==========================================================================
    style.css — VendaBoa
-   Organização: Tokens → Reset → Layout → Componentes → Páginas
+   Organização: Tokens → Reset → Layout → Componentes → Páginas → Responsivo
    ========================================================================== */
 
 
-/* ── 1. TOKENS DE DESIGN ────────────────────────────────────────────────────
-   Todas as cores, espaçamentos e transições em um único lugar.
-   Altere aqui para refletir em toda a aplicação.
-   ────────────────────────────────────────────────────────────────────────── */
+/* ── 1. TOKENS DE DESIGN ─────────────────────────────────────────────────── */
 :root {
-    /* Paleta principal */
-    --color-bg-app: linear-gradient(135deg, #2e3849 0%, #435c88 100%);
-    --color-surface: rgba(255, 255, 255, 0.05);
+    --color-bg-app:        linear-gradient(135deg, #2e3849 0%, #435c88 100%);
+    --color-surface:       rgba(255, 255, 255, 0.05);
     --color-surface-solid: #161920;
-    --color-surface-2: #1e222b;
-    --color-border: rgba(255, 255, 255, 0.1);
-    --color-border-solid: #2a2f3a;
-    --color-border-hover: #3d4455;
+    --color-surface-2:     #1e222b;
+    --color-border:        rgba(255, 255, 255, 0.1);
+    --color-border-solid:  #2a2f3a;
+    --color-border-hover:  #3d4455;
 
-    /* Texto */
-    --color-text: #ffffff;
-    --color-text-muted: rgba(255, 255, 255, 0.7);
-    --color-text-dim: #8891a4;
-    --color-text-subtle: #636b7e;
+    --color-text:         #ffffff;
+    --color-text-muted:   rgba(255, 255, 255, 0.7);
+    --color-text-dim:     #8891a4;
+    --color-text-subtle:  #636b7e;
 
-    /* Semânticas */
-    --color-primary: #4299e1;
-    --color-success: #48bb78;
-    --color-danger: #f56565;
-    --color-danger-dark: #e53e3e;
-    --color-neutral: #718096;
-    --color-accent: #00e5a0;
-    --color-accent-dim: rgba(0, 229, 160, 0.12);
-    --color-accent-glow: rgba(0, 229, 160, 0.35);
+    --color-primary:      #4299e1;
+    --color-success:      #48bb78;
+    --color-danger:       #f56565;
+    --color-danger-dark:  #e53e3e;
+    --color-neutral:      #718096;
+    --color-accent:       #00e5a0;
+    --color-accent-dim:   rgba(0, 229, 160, 0.12);
+    --color-accent-glow:  rgba(0, 229, 160, 0.35);
 
-    /* Tipografia */
-    --font-base: 'Segoe UI', sans-serif;
-    --font-mono: 'DM Mono', monospace;
+    --font-base:    'Segoe UI', sans-serif;
+    --font-mono:    'DM Mono', monospace;
     --font-display: 'Syne', sans-serif;
 
-    /* Bordas */
     --radius-sm: 8px;
     --radius-md: 10px;
     --radius-lg: 20px;
 
-    /* Animações */
-    --transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition:        0.18s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Espaçamentos responsivos */
+    --spacing-page: 24px;
+    --navbar-h:     56px;
+    --backbar-h:    40px;
 }
 
 
-/* ── 2. RESET ───────────────────────────────────────────────────────────────
-   ────────────────────────────────────────────────────────────────────────── */
-*,
-*::before,
-*::after {
+/* ── 2. RESET ────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -68,16 +61,19 @@ body {
     justify-content: center;
     align-items: center;
     color: var(--color-text);
+    padding-top: var(--navbar-h);
 }
 
-h1,
-h2 {
+body:has(#app-back-btn) {
+    padding-top: calc(var(--navbar-h) + var(--backbar-h));
+}
+
+h1, h2 {
     font-weight: 300;
     text-align: center;
 }
 
-input,
-select {
+input, select {
     width: 100%;
     padding: 12px;
     margin: 10px 0;
@@ -91,25 +87,13 @@ select {
     transition: border-color var(--transition);
 }
 
-input:focus,
-select:focus {
-    border-color: var(--color-primary);
-}
-
-input::placeholder {
-    color: var(--color-text-muted);
-}
-
-select option {
-    background: #2e3849;
-    color: var(--color-text);
-}
+input:focus, select:focus { border-color: var(--color-primary); }
+input::placeholder         { color: var(--color-text-muted); }
+select option              { background: #2e3849; color: var(--color-text); }
 
 
-/* ── 3. COMPONENTES BASE ────────────────────────────────────────────────────
-   ────────────────────────────────────────────────────────────────────────── */
+/* ── 3. COMPONENTES BASE ─────────────────────────────────────────────────── */
 
-/* Card glassmorphism padrão */
 .glass-card {
     background: var(--color-surface);
     backdrop-filter: blur(15px);
@@ -121,7 +105,6 @@ select option {
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
 }
 
-/* Card compacto (login, abertura de caixa) */
 .card {
     background: rgba(255, 255, 255, 0.15);
     backdrop-filter: blur(10px);
@@ -150,59 +133,27 @@ select option {
     width: 100%;
 }
 
-.btn:hover:not(:disabled) {
-    transform: scale(1.03);
-}
+.btn:hover:not(:disabled) { transform: scale(1.03); }
+.btn:disabled              { opacity: 0.45; cursor: not-allowed; }
 
-.btn:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
-}
-
-/* Variantes de botão */
-.btn-primary {
-    background: var(--color-primary);
-    color: white;
-}
-
-.btn-success {
-    background: var(--color-success);
-    color: white;
-}
-
-.btn-entrada {
-    background: var(--color-success);
-    color: white;
-}
-
-.btn-saida {
-    background: var(--color-danger);
-    color: white;
-}
-
-.btn-fechar {
-    background: var(--color-danger-dark);
-    color: white;
-}
-
-.btn-neutral {
-    background: var(--color-neutral);
-    color: white;
-}
+.btn-primary     { background: var(--color-primary);     color: white; }
+.btn-success     { background: var(--color-success);     color: white; }
+.btn-entrada     { background: var(--color-success);     color: white; }
+.btn-saida       { background: var(--color-danger);      color: white; }
+.btn-fechar      { background: var(--color-danger-dark); color: white; }
+.btn-neutral     { background: var(--color-neutral);     color: white; }
 
 .btn-ghost {
     background: transparent;
     border: 1px solid var(--color-neutral);
     color: var(--color-neutral);
 }
-
 .btn-ghost:hover:not(:disabled) {
     border-color: var(--color-danger);
     color: var(--color-danger);
     transform: none;
 }
 
-/* Par de botões lado a lado */
 .button-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -211,10 +162,9 @@ select option {
 }
 
 
-/* ── 4. LAYOUTS DE PÁGINA ───────────────────────────────────────────────────
-   ────────────────────────────────────────────────────────────────────────── */
+/* ── 4. LAYOUTS DE PÁGINA ────────────────────────────────────────────────── */
 
-/* Wrapper centralizado estreito (login, abertura de caixa, fechamento) */
+/* Centralizado estreito (login, abertura, fechamento) */
 .page-centered {
     width: 90%;
     max-width: 460px;
@@ -223,37 +173,37 @@ select option {
     gap: 16px;
 }
 
-/* Grid lateral: coluna principal + painel fixo (painel de operações) */
+/* Grid lateral: ações + painel histórico */
 .page-split {
     display: grid;
     grid-template-columns: 1fr 350px;
     gap: 20px;
     width: 900px;
-    max-width: 100%;
+    max-width: calc(100vw - 48px);
+    padding: var(--spacing-page);
 }
 
-/* Grid de duas colunas iguais (dashboard) */
+/* Grid 2 colunas (dashboard) */
 .page-grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 20px;
-    padding: 20px;
+    padding: var(--spacing-page);
     width: 960px;
-    max-width: 100%;
+    max-width: calc(100vw - 48px);
 }
 
-/* Wrapper de página de pagamento — herda o fundo do body */
+/* Wrapper pagamento */
 .page-dark {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 24px 16px;
+    padding: var(--spacing-page) 16px;
 }
 
 
-/* ── 5. HISTÓRICO DE LANÇAMENTOS ────────────────────────────────────────────
-   ────────────────────────────────────────────────────────────────────────── */
+/* ── 5. HISTÓRICO DE LANÇAMENTOS ─────────────────────────────────────────── */
 .history-panel {
     max-height: 500px;
     overflow-y: auto;
@@ -277,8 +227,7 @@ select option {
 }
 
 
-/* ── 6. DASHBOARD ───────────────────────────────────────────────────────────
-   ────────────────────────────────────────────────────────────────────────── */
+/* ── 6. DASHBOARD ────────────────────────────────────────────────────────── */
 .caixa-item {
     display: flex;
     justify-content: space-between;
@@ -293,23 +242,19 @@ select option {
     display: flex;
     gap: 10px;
     margin-top: 16px;
+    grid-column: 1 / -1; /* ocupa as 2 colunas */
 }
 
-.dashboard-actions .btn {
-    flex: 1;
-}
+.dashboard-actions .btn { flex: 1; }
 
 
-/* ── 6b. PAINEL DE OPERAÇÕES — card de destaque ─────────────────────────────
-   ────────────────────────────────────────────────────────────────────────── */
+/* ── 6b. PAINEL DE OPERAÇÕES — card de destaque ──────────────────────────── */
 .panel-cta {
     border-color: rgba(72, 187, 120, 0.3);
     background: rgba(72, 187, 120, 0.05);
 }
 
-.panel-cta h2 {
-    color: var(--color-success);
-}
+.panel-cta h2 { color: var(--color-success); }
 
 .panel-cta-desc {
     font-size: 13px;
@@ -320,10 +265,7 @@ select option {
 }
 
 
-/* ── 7. TELA DE FECHAMENTO DE CAIXA ─────────────────────────────────────────
-   ────────────────────────────────────────────────────────────────────────── */
-
-/* Container principal — mesmo glassmorphism do restante */
+/* ── 7. TELA DE FECHAMENTO DE CAIXA ──────────────────────────────────────── */
 .close-panel {
     width: 100%;
     max-width: 460px;
@@ -337,7 +279,6 @@ select option {
     animation: anim-slide-up var(--transition-bounce) both;
 }
 
-/* Cabeçalho com ícone de aviso */
 .close-header {
     padding: 32px 32px 24px;
     text-align: center;
@@ -345,11 +286,7 @@ select option {
     background: rgba(229, 62, 62, 0.05);
 }
 
-.close-header-icon {
-    font-size: 36px;
-    margin-bottom: 12px;
-    line-height: 1;
-}
+.close-header-icon { font-size: 36px; margin-bottom: 12px; line-height: 1; }
 
 .close-title {
     font-size: 20px;
@@ -365,7 +302,6 @@ select option {
     text-align: center;
 }
 
-/* Bloco de resumo financeiro */
 .close-summary {
     padding: 24px 32px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
@@ -375,7 +311,6 @@ select option {
     justify-content: center;
 }
 
-/* Loading dots enquanto os dados chegam */
 .close-loading {
     display: flex;
     gap: 8px;
@@ -392,30 +327,9 @@ select option {
     animation: anim-loading-dot 1.2s ease-in-out infinite;
 }
 
-.close-loading-dot:nth-child(2) {
-    animation-delay: 0.2s;
-}
+.close-loading-dot:nth-child(2) { animation-delay: 0.2s; }
+.close-loading-dot:nth-child(3) { animation-delay: 0.4s; }
 
-.close-loading-dot:nth-child(3) {
-    animation-delay: 0.4s;
-}
-
-@keyframes anim-loading-dot {
-
-    0%,
-    80%,
-    100% {
-        transform: scale(0.7);
-        opacity: 0.3;
-    }
-
-    40% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-/* Linhas de dados */
 .close-rows {
     flex-direction: column;
     gap: 12px;
@@ -428,36 +342,18 @@ select option {
     align-items: center;
 }
 
-.close-row-label {
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.5);
-}
+.close-row-label   { font-size: 13px; color: rgba(255, 255, 255, 0.5); }
+.close-row-value   { font-size: 15px; font-weight: 600; }
+.close-row-value.positive { color: var(--color-success); }
+.close-row-value.negative { color: var(--color-danger);  }
+.close-row-value.neutral  { color: rgba(255, 255, 255, 0.85); }
 
-.close-row-value {
-    font-size: 15px;
-    font-weight: 600;
-}
-
-.close-row-value.positive {
-    color: var(--color-success);
-}
-
-.close-row-value.negative {
-    color: var(--color-danger);
-}
-
-.close-row-value.neutral {
-    color: rgba(255, 255, 255, 0.85);
-}
-
-/* Linha divisória antes do total */
 .close-summary-divider {
     height: 1px;
     background: rgba(255, 255, 255, 0.08);
     margin: 4px 0;
 }
 
-/* Linha de total — destaque maior */
 .close-row-total .close-row-label {
     font-size: 14px;
     font-weight: 600;
@@ -469,7 +365,6 @@ select option {
     font-weight: 700;
 }
 
-/* Botões */
 .close-actions {
     padding: 24px 32px;
     display: flex;
@@ -478,8 +373,7 @@ select option {
 }
 
 
-/* ── 8. TELA DE PAGAMENTO ───────────────────────────────────────────────────
-   ────────────────────────────────────────────────────────────────────────── */
+/* ── 8. TELA DE PAGAMENTO ────────────────────────────────────────────────── */
 .pay-panel {
     width: 100%;
     max-width: 520px;
@@ -555,17 +449,13 @@ select option {
     text-align: left;
 }
 
-/* Grid de métodos de pagamento */
 .methods-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
-.method-card {
-    position: relative;
-    cursor: pointer;
-}
+.method-card { position: relative; cursor: pointer; }
 
 .method-card input[type="radio"] {
     position: absolute;
@@ -592,16 +482,13 @@ select option {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-.method-card input:checked+.method-label {
+.method-card input:checked + .method-label {
     border-color: var(--color-success);
     background: rgba(72, 187, 120, 0.12);
     box-shadow: 0 0 0 1px var(--color-success), 0 4px 20px rgba(72, 187, 120, 0.25);
 }
 
-.method-icon {
-    font-size: 26px;
-    line-height: 1;
-}
+.method-icon { font-size: 26px; line-height: 1; }
 
 .method-name {
     font-size: 12px;
@@ -611,11 +498,8 @@ select option {
     transition: color var(--transition);
 }
 
-.method-card input:checked+.method-label .method-name {
-    color: var(--color-success);
-}
+.method-card input:checked + .method-label .method-name { color: var(--color-success); }
 
-/* Campos condicionais (troco / parcelas) */
 .conditional-field {
     display: none;
     flex-direction: column;
@@ -623,9 +507,7 @@ select option {
     animation: anim-fade-in 0.2s ease both;
 }
 
-.conditional-field.visible {
-    display: flex;
-}
+.conditional-field.visible { display: flex; }
 
 .field-label {
     font-size: 10px;
@@ -649,9 +531,7 @@ select option {
     margin: 0;
 }
 
-.field-input:focus {
-    border-color: var(--color-success);
-}
+.field-input:focus { border-color: var(--color-success); }
 
 .troco-display {
     display: flex;
@@ -680,9 +560,7 @@ select option {
     transition: color var(--transition);
 }
 
-.troco-valor.negativo {
-    color: var(--color-danger);
-}
+.troco-valor.negativo { color: var(--color-danger); }
 
 .parcelas-select {
     appearance: none;
@@ -698,20 +576,10 @@ select option {
     transition: border-color var(--transition);
 }
 
-.parcelas-select:focus {
-    border-color: var(--color-success);
-}
+.parcelas-select:focus   { border-color: var(--color-success); }
+.parcelas-select option  { background: #2e3849; }
 
-.parcelas-select option {
-    background: #2e3849;
-}
-
-/* Botões da tela de pagamento */
-.pay-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+.pay-actions { display: flex; flex-direction: column; gap: 10px; }
 
 .btn-confirmar {
     width: 100%;
@@ -736,16 +604,13 @@ select option {
     box-shadow: 0 8px 28px rgba(72, 187, 120, 0.4);
 }
 
-.btn-confirmar:disabled {
-    opacity: 0.35;
-    cursor: not-allowed;
-}
+.btn-confirmar:disabled { opacity: 0.35; cursor: not-allowed; }
 
 .btn-confirmar.loading::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.25) 50%, transparent 100%);
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 50%, transparent 100%);
     animation: anim-shimmer 1.2s infinite;
 }
 
@@ -770,58 +635,35 @@ select option {
 }
 
 
-/* ── 9. ANIMAÇÕES ───────────────────────────────────────────────────────────
-   Nomes prefixados com anim- para evitar conflito com bibliotecas externas.
-   ────────────────────────────────────────────────────────────────────────── */
+/* ── 9. ANIMAÇÕES ────────────────────────────────────────────────────────── */
 @keyframes anim-slide-up {
-    from {
-        opacity: 0;
-        transform: translateY(24px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes anim-fade-in {
-    from {
-        opacity: 0;
-        transform: translateY(-6px);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes anim-shimmer {
-    from {
-        transform: translateX(-100%);
-    }
-
-    to {
-        transform: translateX(100%);
-    }
+    from { transform: translateX(-100%); }
+    to   { transform: translateX(100%); }
 }
 
-/* ── 10. NAVBAR ──────────────────────────────────────────────────────────────
-   ────────────────────────────────────────────────────────────────────────── */
-
-/* Ajusta o body para reservar espaço da navbar fixa */
-body {
-    padding-top: 56px;
+@keyframes anim-loading-dot {
+    0%, 80%, 100% { transform: scale(0.7); opacity: 0.3; }
+    40%           { transform: scale(1);   opacity: 1;   }
 }
 
-/* Barra superior */
+
+/* ── 10. NAVBAR ──────────────────────────────────────────────────────────── */
 .navbar {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    height: 56px;
+    height: var(--navbar-h);
     z-index: 100;
     display: flex;
     align-items: center;
@@ -840,7 +682,6 @@ body {
     color: rgba(255, 255, 255, 0.9);
 }
 
-/* Botão do usuário */
 .navbar-user {
     display: flex;
     align-items: center;
@@ -861,7 +702,6 @@ body {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-/* Avatar com iniciais */
 .navbar-avatar {
     width: 30px;
     height: 30px;
@@ -894,11 +734,8 @@ body {
     flex-shrink: 0;
 }
 
-.navbar-user.active .navbar-chevron {
-    transform: rotate(180deg);
-}
+.navbar-user.active .navbar-chevron { transform: rotate(180deg); }
 
-/* Dropdown */
 .navbar-dropdown {
     position: absolute;
     top: calc(100% + 10px);
@@ -944,11 +781,7 @@ body {
     text-overflow: ellipsis;
 }
 
-.navbar-dropdown-divider {
-    height: 1px;
-    background: rgba(255, 255, 255, 0.08);
-    margin: 0;
-}
+.navbar-dropdown-divider { height: 1px; background: rgba(255, 255, 255, 0.08); }
 
 .navbar-dropdown-item {
     display: flex;
@@ -968,11 +801,7 @@ body {
     border-radius: 0;
 }
 
-.navbar-dropdown-item svg {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
-}
+.navbar-dropdown-item svg { width: 16px; height: 16px; flex-shrink: 0; }
 
 .navbar-dropdown-item:hover {
     background: rgba(255, 255, 255, 0.06);
@@ -984,26 +813,22 @@ body {
     color: var(--color-danger);
 }
 
-/* ── 11. BOTÃO VOLTAR ────────────────────────────────────────────────────────
-   ────────────────────────────────────────────────────────────────────────── */
+
+/* ── 11. BOTÃO VOLTAR ────────────────────────────────────────────────────── */
 #app-back-btn {
     position: fixed;
-    top: 56px;
-    /* logo abaixo da navbar */
+    top: var(--navbar-h);
     left: 0;
     right: 0;
-    padding: 10px 24px;
+    height: var(--backbar-h);
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
     background: rgba(30, 36, 48, 0.6);
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.06);
     z-index: 99;
-}
-
-/* Ajusta o body para reservar espaço da barra de voltar quando presente */
-body:has(#app-back-btn) {
-    padding-top: 96px;
-    /* 56px navbar + 40px back bar */
 }
 
 .back-btn {
@@ -1022,13 +847,144 @@ body:has(#app-back-btn) {
     transition: color var(--transition);
 }
 
-.back-btn:hover {
-    color: rgba(255, 255, 255, 0.9);
-    background: transparent;
+.back-btn:hover { color: rgba(255, 255, 255, 0.9); background: transparent; }
+.back-btn svg   { width: 16px; height: 16px; flex-shrink: 0; }
+
+
+/* ── 12. RESPONSIVIDADE ──────────────────────────────────────────────────── */
+
+/* ── Tablet (≤ 768px) ── */
+@media (max-width: 768px) {
+    :root {
+        --spacing-page: 16px;
+    }
+
+    /* Dashboard: empilha as duas colunas */
+    .page-grid-2 {
+        grid-template-columns: 1fr;
+        width: 100%;
+        padding: var(--spacing-page);
+    }
+
+    /* Painel de operações: empilha ações + histórico */
+    .page-split {
+        grid-template-columns: 1fr;
+        width: 100%;
+        padding: var(--spacing-page);
+    }
+
+    /* Histórico não tem altura máxima no mobile — mostra tudo */
+    .history-panel {
+        max-height: none;
+    }
+
+    /* Pagamento: padding menor */
+    .pay-header { padding: 24px 24px 20px; }
+    .pay-body   { padding: 20px 24px 28px; }
+    .pay-total  { font-size: 44px; }
+
+    /* Fechamento: padding menor */
+    .close-header  { padding: 24px 20px 18px; }
+    .close-summary { padding: 20px 20px; }
+    .close-actions { padding: 18px 20px; }
+
+    /* Navbar: esconde o nome, mostra só o avatar */
+    .navbar-name { display: none; }
+    .navbar { padding: 0 16px; }
+
+    /* Botão voltar: padding menor */
+    #app-back-btn { padding: 0 16px; }
+
+    /* Centralizado: largura total */
+    .page-centered { width: 92%; }
+
+    /* Glass cards: padding menor */
+    .glass-card { padding: 20px; }
+    .card       { padding: 18px; }
 }
 
-.back-btn svg {
-    width: 16px;
-    height: 16px;
-    flex-shrink: 0;
+/* ── Mobile (≤ 480px) ── */
+@media (max-width: 480px) {
+    :root {
+        --spacing-page: 12px;
+    }
+
+    body { align-items: flex-start; }
+
+    /* Centralizado ocupa tela toda */
+    .page-centered {
+        width: 100%;
+        max-width: 100%;
+        padding: 12px;
+        gap: 12px;
+    }
+
+    /* Painel de operações: sem padding lateral da página */
+    .page-split {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    /* Dashboard */
+    .page-grid-2 {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    /* Cards menores */
+    .glass-card { padding: 16px; border-radius: var(--radius-md); }
+    .card       { padding: 14px; border-radius: var(--radius-md); }
+
+    /* Botões de par: empilha em mobile pequeno */
+    .button-row {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+
+    /* Pagamento */
+    .pay-panel  { border-radius: var(--radius-md); }
+    .pay-header { padding: 20px 16px 16px; }
+    .pay-body   { padding: 16px 16px 20px; gap: 16px; }
+    .pay-total  { font-size: 36px; }
+    .pay-total span { font-size: 18px; }
+
+    /* Grid de métodos: 2 colunas menores */
+    .method-label { padding: 14px 8px; gap: 6px; }
+    .method-icon  { font-size: 20px; }
+    .method-name  { font-size: 11px; }
+
+    /* Fechamento */
+    .close-panel   { border-radius: var(--radius-md); }
+    .close-header  { padding: 20px 16px 14px; }
+    .close-summary { padding: 16px; min-height: 120px; }
+    .close-actions { padding: 14px 16px; }
+    .close-row-total .close-row-value { font-size: 18px; }
+
+    /* Títulos menores */
+    h2 { font-size: 16px; }
+
+    /* Inputs com fonte maior para evitar zoom automático no iOS */
+    input, select { font-size: 16px; }
+
+    /* Troco */
+    .troco-valor { font-size: 18px; }
+
+    /* Navbar */
+    .navbar { padding: 0 12px; }
+    #app-back-btn { padding: 0 12px; }
+
+    /* Ações do dashboard: empilha */
+    .dashboard-actions { flex-direction: column; }
+}
+
+/* ── Telas grandes (≥ 1280px) ── */
+@media (min-width: 1280px) {
+    .page-grid-2 {
+        width: 1100px;
+    }
+
+    .page-split {
+        width: 1000px;
+        grid-template-columns: 1fr 380px;
+    }
 }

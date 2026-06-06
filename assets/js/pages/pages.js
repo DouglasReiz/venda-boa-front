@@ -34,7 +34,6 @@ export function dashboardPage() {
         </div>
 
         <div class="dashboard-actions">
-            <button id="btn-logout"      class="btn btn-ghost">Sair</button>
             <button id="btn-ir-checkout" class="btn btn-primary">Ir para Movimentação</button>
         </div>
     </div>
@@ -59,8 +58,6 @@ export function checkoutOpenPage() {
                    placeholder="Valor de Abertura (ex: 100.00)" step="0.01">
             <button id="btn-abrir-caixa" class="btn btn-primary">Confirmar Abertura</button>
         </div>
-
-        <button id="btn-logout" class="btn btn-ghost">Sair</button>
     </div>
     `;
 }
@@ -96,7 +93,6 @@ export function checkoutOperationsPage() {
                 <h2>Encerrar Turno</h2>
                 <div class="button-row">
                     <button id="btn-fechar-caixa" class="btn btn-fechar">Fechar Caixa</button>
-                    <button id="btn-logout"        class="btn btn-ghost">Sair</button>
                 </div>
             </div>
 
