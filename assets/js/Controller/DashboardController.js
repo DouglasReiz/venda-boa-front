@@ -7,7 +7,7 @@ export class DashboardController extends BaseController {
     constructor(auth, caixaAdminService, graficoService) {
         super(auth);
         this.#caixaAdmin = caixaAdminService;
-        this.#grafico = graficoService;
+        this.#grafico    = graficoService;
     }
 
     async init() {
@@ -15,9 +15,19 @@ export class DashboardController extends BaseController {
         try {
             await this.#renderCaixas();
             this.#bindBotoesFechamento();
+            this.#bindNavegacao();
             await this.#renderGrafico();
         } catch (error) {
             console.error('Erro ao inicializar Dashboard:', error);
+        }
+    }
+
+    #bindNavegacao() {
+        const btnCheckout = document.getElementById('btn-ir-checkout');
+        if (btnCheckout) {
+            btnCheckout.addEventListener('click', () => {
+                window.router.navigate('/checkout/abrir');
+            });
         }
     }
 
@@ -77,22 +87,22 @@ export class DashboardController extends BaseController {
         if (!ctx) return;
 
         try {
-            const dados = await this.#grafico.getHistoricoFechamentos();
-            const lista = Array.isArray(dados) ? dados : [];
+            const dados  = await this.#grafico.getHistoricoFechamentos();
+            const lista  = Array.isArray(dados) ? dados : [];
 
             if (window.meuGraficoVendas) window.meuGraficoVendas.destroy();
 
             window.meuGraficoVendas = new Chart(ctx.getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels: lista.map(i => i.label),
+                    labels:   lista.map(i => i.label),
                     datasets: [{
-                        label: 'Faturamento por Caixa (R$)',
-                        data: lista.map(i => i.valor),
-                        borderColor: '#48bb78',
+                        label:           'Faturamento por Caixa (R$)',
+                        data:            lista.map(i => i.valor),
+                        borderColor:     '#48bb78',
                         backgroundColor: 'rgba(72,187,120,0.1)',
-                        tension: 0.4,
-                        fill: true,
+                        tension:         0.4,
+                        fill:            true,
                     }]
                 },
                 options: {
