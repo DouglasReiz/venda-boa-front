@@ -22,7 +22,7 @@ import {
 } from './pages/pages.js';
 
 // ── Infraestrutura ────────────────────────────────────────────────────────────
-const api = new ApiClient('https://executives-cleaning-propecia-informed.trycloudflare.com/api');
+const api = new ApiClient('https://vegas-she-gallery-pushed.trycloudflare.com/api');
 
 // ── Serviços ──────────────────────────────────────────────────────────────────
 const auth       = new AuthService(api);
