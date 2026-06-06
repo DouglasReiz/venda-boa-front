@@ -25,7 +25,7 @@ export function renderNavbar(auth, onLogout) {
     navbar.id        = 'app-navbar';
     navbar.innerHTML = `
         <nav class="navbar">
-            <span class="navbar-brand">VendaBoa</span>
+            <a class="navbar-brand" id="navbar-home-link" href="#/dashboard">VendaBoa</a>
 
             <div class="navbar-user" id="navbar-user-btn">
                 <div class="navbar-avatar">${initials}</div>

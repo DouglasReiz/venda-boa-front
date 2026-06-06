@@ -680,6 +680,12 @@ select option              { background: #2e3849; color: var(--color-text); }
     font-weight: 700;
     letter-spacing: 0.04em;
     color: rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    transition: color var(--transition);
+}
+
+.navbar-brand:hover {
+    color: #ffffff;
 }
 
 .navbar-user {
