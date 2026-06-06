@@ -22,7 +22,7 @@ import {
 } from './pages/pages.js';
 
 // ── Infraestrutura ────────────────────────────────────────────────────────────
-const api = new ApiClient('http://136.248.105.152/api');
+const api = new ApiClient('https://executives-cleaning-propecia-informed.trycloudflare.com/api');
 
 // ── Serviços ──────────────────────────────────────────────────────────────────
 const auth       = new AuthService(api);
