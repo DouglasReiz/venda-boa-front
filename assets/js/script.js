@@ -22,7 +22,7 @@ import {
 } from './pages/pages.js';
 
 // ── Infraestrutura ────────────────────────────────────────────────────────────
-const api = new ApiClient('https://gasoline-bluetooth-measured-advertisement.trycloudflare.com/api');
+const api = new ApiClient('https://criticism-technology-franchise-judge.trycloudflare.com/api');
 
 // ── Serviços ──────────────────────────────────────────────────────────────────
 const auth       = new AuthService(api);
