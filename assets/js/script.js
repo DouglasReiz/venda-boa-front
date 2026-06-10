@@ -22,7 +22,7 @@ import {
 } from './pages/pages.js';
 
 // ── Infraestrutura ────────────────────────────────────────────────────────────
-const api = new ApiClient('https://criticism-technology-franchise-judge.trycloudflare.com/api');
+const api = new ApiClient('https://api.pdvvendaboa.com.br/api');
 
 // ── Serviços ──────────────────────────────────────────────────────────────────
 const auth       = new AuthService(api);
