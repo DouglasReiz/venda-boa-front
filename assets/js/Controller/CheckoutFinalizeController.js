@@ -71,7 +71,7 @@ export class CheckoutFinalizeController extends BaseController {
 
     #bindCancelar() {
         const btn = document.getElementById('btn-cancelar-pagamento');
-        if (btn) btn.addEventListener('click', () => window.router.navigate('/checkout/painel'));
+        if (btn) btn.addEventListener('click', () => window.router.navigate('/pdv'));
     }
 
     async #confirmarPagamento(metodo) {
@@ -110,7 +110,7 @@ export class CheckoutFinalizeController extends BaseController {
             //    atualizado (sem as transações que acabaram de ser finalizadas,
             //    pois pertencem ao mesmo checkout ainda aberto mas o estado local
             //    foi limpo, indicando início de nova venda)
-            window.router.navigate('/checkout/painel');
+            window.router.navigate('/pdv');
         } catch (e) {
             if (this.tratarErroAuth(e)) return;
             alert('Erro ao processar pagamento: ' + e.message);

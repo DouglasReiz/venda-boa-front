@@ -33,8 +33,33 @@ export function dashboardPage() {
             <canvas id="graficoVendas"></canvas>
         </div>
 
-        <div class="dashboard-actions">
-            <button id="btn-ir-checkout" class="btn btn-primary">Ir para Movimentação</button>
+        <!-- Navegação rápida -->
+        <div class="dashboard-nav">
+
+            <div class="dash-nav-section">
+                <p class="dash-nav-label">Caixa</p>
+                <div class="dash-nav-group">
+                    <button id="btn-ir-checkout" class="btn btn-primary dash-nav-btn">
+                        <span class="dash-nav-icon">💰</span>
+                        Movimentações
+                    </button>
+                    <button id="btn-ir-pdv" class="btn btn-success dash-nav-btn">
+                        <span class="dash-nav-icon">🛒</span>
+                        PDV — Iniciar Venda
+                    </button>
+                </div>
+            </div>
+
+            <div class="dash-nav-section">
+                <p class="dash-nav-label">Administração</p>
+                <div class="dash-nav-group">
+                    <button id="btn-ir-admin-produtos" class="btn btn-neutral dash-nav-btn">
+                        <span class="dash-nav-icon">📦</span>
+                        Gerenciar Produtos
+                    </button>
+                </div>
+            </div>
+
         </div>
     </div>
     `;
@@ -58,6 +83,7 @@ export function checkoutOpenPage() {
                    placeholder="Valor de Abertura (ex: 100.00)" step="0.01">
             <button id="btn-abrir-caixa" class="btn btn-primary">Confirmar Abertura</button>
         </div>
+
     </div>
     `;
 }

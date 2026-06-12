@@ -103,7 +103,7 @@ export class CheckoutCloseController extends BaseController {
 
     #bindCancelar() {
         const btn = document.getElementById('btn-cancelar-fechamento');
-        if (btn) btn.addEventListener('click', () => window.router.navigate('/checkout/painel'));
+        if (btn) btn.addEventListener('click', () => window.router.navigate('/pdv'));
     }
 
     #setText(id, text) {

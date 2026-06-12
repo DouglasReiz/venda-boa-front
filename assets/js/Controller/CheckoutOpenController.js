@@ -20,9 +20,9 @@ export class CheckoutOpenController extends BaseController {
     bindCheckoutOpen() {
         renderBackButton('Voltar ao Dashboard');
         this.montarNavbar();
-        const btnAbrir  = document.getElementById('btn-abrir-caixa');
+        const btnAbrir = document.getElementById('btn-abrir-caixa');
 
-        if (btnAbrir)  btnAbrir.addEventListener('click', () => this.#abrirCaixa());
+        if (btnAbrir) btnAbrir.addEventListener('click', () => this.#abrirCaixa());
     }
 
     async #abrirCaixa() {
@@ -36,7 +36,7 @@ export class CheckoutOpenController extends BaseController {
         try {
             await this.#checkout.abrir(valor);
             alert('Caixa aberto com sucesso!');
-            window.router.navigate('/checkout/painel');
+            window.router.navigate('/pdv');
         } catch (e) {
             if (this.tratarErroAuth(e)) return;
             alert('Erro ao abrir caixa: ' + e.message);
