@@ -24,7 +24,7 @@ import {
 import { adminProductsPage, pdvPage } from './pages/products.js';
 
 // ── Infraestrutura ────────────────────────────────────────────────────────────
-const api = new ApiClient('http://localhost:8000/api');
+const api = new ApiClient('https://api.pdvvendaboa.com.br/api');
 
 // ── Serviços ──────────────────────────────────────────────────────────────────
 const auth       = new AuthService(api);
