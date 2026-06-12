@@ -1007,3 +1007,662 @@ select option              { background: #7a1a0a; color: var(--color-text); }
         grid-template-columns: 1fr 380px;
     }
 }
+
+
+/* ── 13. ADMIN DE PRODUTOS ───────────────────────────────────────────────── */
+.admin-products-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: var(--spacing-page);
+    width: 960px;
+    max-width: calc(100vw - 48px);
+    align-items: start;
+}
+
+.admin-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.admin-section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.admin-section-header h2 {
+    text-align: left;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.btn-sm {
+    width: auto;
+    padding: 7px 14px;
+    font-size: 13px;
+}
+
+.admin-form {
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.admin-form.hidden { display: none; }
+
+.color-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 4px 0;
+}
+
+.color-row label { font-size: 13px; color: var(--color-text-muted); }
+
+.color-input {
+    width: 40px;
+    height: 36px;
+    padding: 2px;
+    margin: 0;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+.toggle-row { margin: 4px 0; }
+
+.toggle-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: var(--color-text-muted);
+    cursor: pointer;
+}
+
+.toggle-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--color-primary);
+}
+
+.variantes-container { display: flex; flex-direction: column; gap: 8px; }
+.variantes-container.hidden { display: none; }
+.variantes-titulo { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-text-subtle); }
+
+.variante-row {
+    display: grid;
+    grid-template-columns: 1fr 100px 32px;
+    gap: 6px;
+    align-items: center;
+}
+
+.variante-row input { margin: 0; padding: 8px 10px; font-size: 13px; }
+
+/* Lista de itens admin */
+.admin-list {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 480px;
+    overflow-y: auto;
+}
+
+.admin-list-loading,
+.admin-list-empty {
+    font-size: 13px;
+    color: var(--color-text-subtle);
+    padding: 16px;
+    text-align: center;
+}
+
+.admin-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: rgba(0,0,0,0.15);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    gap: 8px;
+}
+
+.admin-list-item-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.cat-badge {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 6px;
+    flex-shrink: 0;
+}
+
+.prod-name  { font-size: 14px; font-weight: 500; color: var(--color-text); }
+.prod-meta  { font-size: 12px; color: var(--color-text-subtle); }
+
+.admin-list-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+
+.btn-icon {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 4px 6px;
+    border-radius: var(--radius-sm);
+    width: auto;
+    margin: 0;
+    transition: background var(--transition);
+}
+
+.btn-icon:hover          { background: rgba(255,255,255,0.08); }
+.btn-icon.danger:hover   { background: rgba(245,101,101,0.15); }
+
+
+/* ── 14. PDV UNIFICADO ───────────────────────────────────────────────────── */
+.pdv-unified-layout {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 0;
+    width: 100vw;
+    max-width: 100vw;
+    height: calc(100vh - var(--navbar-h));
+    overflow: hidden;
+}
+
+/* Catálogo */
+.pdv-catalog {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    padding: 16px;
+    gap: 12px;
+}
+
+/* Barra de categorias */
+.pdv-categories {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.pdv-cat-btn {
+    width: auto;
+    padding: 7px 16px;
+    background: rgba(0,0,0,0.2);
+    border: 1.5px solid var(--color-border);
+    border-radius: 999px;
+    color: var(--color-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--transition), border-color var(--transition), color var(--transition);
+    margin: 0;
+}
+
+.pdv-cat-btn:hover {
+    background: rgba(0,0,0,0.3);
+    border-color: var(--color-primary);
+    color: var(--color-text);
+}
+
+.pdv-cat-btn.active {
+    background: var(--color-accent-dim);
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+/* Grade de produtos */
+.pdv-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 10px;
+    overflow-y: auto;
+    padding-bottom: 8px;
+}
+
+.pdv-loading,
+.pdv-empty {
+    grid-column: 1/-1;
+    text-align: center;
+    color: var(--color-text-subtle);
+    padding: 40px 0;
+    font-size: 14px;
+}
+
+.pdv-product-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 16px 10px;
+    background: rgba(0,0,0,0.2);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    text-align: center;
+    transition: border-color var(--transition), background var(--transition), transform var(--transition);
+    width: 100%;
+    margin: 0;
+}
+
+.pdv-product-card:hover {
+    border-color: var(--color-primary);
+    background: var(--color-accent-dim);
+    transform: translateY(-2px);
+}
+
+.pdv-product-card:active { transform: translateY(0); }
+
+.pdv-product-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--color-text);
+    line-height: 1.3;
+}
+
+.pdv-product-price {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--color-primary);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.pdv-product-price small {
+    font-size: 10px;
+    font-weight: 400;
+    color: var(--color-text-subtle);
+}
+
+/* Painel lateral unificado */
+.pdv-side {
+    display: flex;
+    flex-direction: column;
+    border-left: 1px solid var(--color-border);
+    background: rgba(0,0,0,0.15);
+    overflow-y: auto;
+    gap: 0;
+}
+
+.pdv-side-section {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.pdv-side-title {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+    margin-bottom: 10px;
+    text-align: left;
+}
+
+.pdv-side-section input {
+    margin: 6px 0;
+    padding: 9px 12px;
+    font-size: 13px;
+}
+
+.pdv-side-section .button-row {
+    margin-top: 8px;
+    gap: 8px;
+}
+
+.pdv-side-section .btn {
+    padding: 9px 12px;
+    font-size: 13px;
+}
+
+/* Histórico dentro do painel */
+.pdv-historico-section { flex: 1; overflow: hidden; display: flex; flex-direction: column; }
+
+.pdv-historico-list {
+    list-style: none;
+    padding: 0;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    max-height: 180px;
+}
+
+.pdv-historico-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 10px;
+    background: rgba(0,0,0,0.15);
+    border-radius: var(--radius-sm);
+    font-size: 12px;
+}
+
+.hist-desc  { color: var(--color-text-muted); flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.hist-valor { font-weight: 600; flex-shrink: 0; margin-left: 8px; }
+.hist-valor.positivo { color: var(--color-success); }
+.hist-valor.negativo { color: var(--color-danger);  }
+
+.pdv-historico-vazio {
+    font-size: 12px;
+    color: var(--color-text-subtle);
+    text-align: center;
+    padding: 12px 0;
+}
+
+/* Ações do turno */
+.pdv-turno-actions { margin-top: auto; }
+.pdv-turno-actions .btn { font-size: 13px; padding: 11px; }
+
+/* Carrinho */
+.pdv-cart {
+    display: flex;
+    flex-direction: column;
+}
+
+.pdv-cart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.pdv-cart-header h2 {
+    text-align: left;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.btn-limpar-cart {
+    background: transparent;
+    border: none;
+    color: var(--color-text-subtle);
+    font-size: 14px;
+    cursor: pointer;
+    padding: 4px 8px;
+    width: auto;
+    margin: 0;
+    border-radius: var(--radius-sm);
+    transition: color var(--transition), background var(--transition);
+}
+
+.btn-limpar-cart:hover {
+    color: var(--color-danger);
+    background: rgba(245,101,101,0.1);
+}
+
+.pdv-cart-list {
+    list-style: none;
+    padding: 8px;
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.pdv-cart-empty {
+    font-size: 13px;
+    color: var(--color-text-subtle);
+    text-align: center;
+    padding: 32px 0;
+}
+
+.pdv-cart-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    padding: 10px;
+    background: rgba(0,0,0,0.2);
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--color-border);
+}
+
+.cart-item-info { display: flex; flex-direction: column; gap: 2px; }
+.cart-item-nome  { font-size: 13px; font-weight: 500; color: var(--color-text); }
+.cart-item-preco { font-size: 12px; color: var(--color-text-dim); }
+
+.cart-item-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cart-qty-btn {
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    margin: 0;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    color: var(--color-text);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background var(--transition);
+}
+
+.cart-qty-btn:hover         { background: rgba(255,255,255,0.15); }
+.cart-qty-btn.danger:hover  { background: rgba(245,101,101,0.2); color: var(--color-danger); }
+.cart-qty { font-size: 13px; font-weight: 600; min-width: 20px; text-align: center; }
+
+.pdv-cart-footer {
+    padding: 14px 16px;
+    border-top: 1px solid var(--color-border);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pdv-cart-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--color-text-muted);
+}
+
+.pdv-cart-total strong {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--color-primary);
+}
+
+/* Modal de variantes */
+.pdv-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(4px);
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+}
+
+.pdv-modal-overlay.hidden { display: none; }
+
+.pdv-modal {
+    background: rgba(100, 18, 8, 0.97);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    width: 100%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    animation: anim-slide-up 0.2s ease both;
+}
+
+.pdv-modal h3 {
+    text-align: center;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--color-text);
+}
+
+.modal-variantes-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.modal-variante-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 14px 10px;
+    background: rgba(0,0,0,0.2);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text);
+    transition: border-color var(--transition), background var(--transition);
+    margin: 0;
+    width: 100%;
+}
+
+.modal-variante-btn span:last-child {
+    font-size: 13px;
+    color: var(--color-primary);
+    font-weight: 700;
+}
+
+.modal-variante-btn:hover {
+    border-color: var(--color-primary);
+    background: var(--color-accent-dim);
+}
+
+/* ── Responsividade PDV / Admin ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .admin-products-layout {
+        grid-template-columns: 1fr;
+        width: 100%;
+        padding: 12px;
+    }
+
+    .pdv-unified-layout {
+        grid-template-columns: 1fr;
+        height: auto;
+        overflow: auto;
+    }
+
+    .pdv-side {
+        border-left: none;
+        border-top: 1px solid var(--color-border);
+        max-height: none;
+    }
+
+    .pdv-historico-list { max-height: 120px; }
+
+    .pdv-grid {
+        grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    }
+}
+
+@media (max-width: 480px) {
+    .pdv-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+    }
+
+    .pdv-product-card  { padding: 12px 6px; }
+    .pdv-product-name  { font-size: 12px; }
+    .pdv-product-price { font-size: 12px; }
+
+    .modal-variantes-grid { grid-template-columns: 1fr; }
+}
+
+
+/* ── 15. DASHBOARD NAV ───────────────────────────────────────────────────── */
+.dashboard-nav {
+    grid-column: 1 / -1;
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+}
+
+.dash-nav-section {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+    min-width: 200px;
+}
+
+.dash-nav-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--color-text-subtle);
+}
+
+.dash-nav-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.dash-nav-btn {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: left;
+    justify-content: flex-start;
+    border-radius: var(--radius-md);
+    transition: transform var(--transition), opacity var(--transition), box-shadow var(--transition);
+}
+
+.dash-nav-btn:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+}
+
+.dash-nav-icon {
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+    .dashboard-nav { flex-direction: column; gap: 16px; }
+    .dash-nav-section { min-width: 100%; }
+}
+
+/* ── Carrinho: itens positivos/negativos ─────────────────────────────────── */
+.cart-item-preco.positivo { color: var(--color-success); }
+.cart-item-preco.negativo { color: var(--color-danger);  }
+.saida-label              { color: var(--color-text-muted); font-style: italic; }

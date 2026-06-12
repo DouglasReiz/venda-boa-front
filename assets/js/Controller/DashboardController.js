@@ -23,12 +23,16 @@ export class DashboardController extends BaseController {
     }
 
     #bindNavegacao() {
-        const btnCheckout = document.getElementById('btn-ir-checkout');
-        if (btnCheckout) {
-            btnCheckout.addEventListener('click', () => {
-                window.router.navigate('/checkout/abrir');
-            });
-        }
+        const binds = [
+            { id: 'btn-ir-checkout',       rota: '/checkout/abrir'    }, // abre caixa → redireciona para /pdv
+            { id: 'btn-ir-pdv',            rota: '/checkout/abrir'    },
+            { id: 'btn-ir-admin-produtos', rota: '/admin/produtos'    },
+        ];
+
+        binds.forEach(({ id, rota }) => {
+            document.getElementById(id)
+                ?.addEventListener('click', () => window.router.navigate(rota));
+        });
     }
 
     async #renderCaixas() {
