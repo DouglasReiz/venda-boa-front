@@ -12,6 +12,7 @@ import { CheckoutCloseController }   from './Controller/CheckoutCloseController.
 import { CheckoutFinalizeController} from './Controller/CheckoutFinalizeController.js';
 import { AdminProductsController }   from './Controller/AdminProductsController.js';
 import { PdvController }             from './Controller/PdvController.js';
+import { StockController }           from './Controller/StockController.js';
 
 import { Router } from './router.js';
 import {
@@ -21,7 +22,7 @@ import {
     checkoutClosePage,
     paymentPage,
 } from './pages/pages.js';
-import { adminProductsPage, pdvPage } from './pages/products.js';
+import { adminProductsPage, pdvPage, stockPage } from './pages/products.js';
 
 // ── Infraestrutura ────────────────────────────────────────────────────────────
 const api = new ApiClient('http://localhost:8000/api');
@@ -41,6 +42,7 @@ const closeCtrl       = new CheckoutCloseController(auth, checkout);
 const finalizeCtrl    = new CheckoutFinalizeController(auth, checkout);
 const adminProdCtrl   = new AdminProductsController(auth, products);
 const pdvCtrl         = new PdvController(auth, products, checkout);
+const stockCtrl       = new StockController(auth, products);
 
 // ── Router ────────────────────────────────────────────────────────────────────
 const router = new Router();
@@ -77,6 +79,7 @@ router
     // ── Produtos ──────────────────────────────────────────────────────────────
     .on('/admin/produtos', () => rotaProtegida(adminProductsPage, () => adminProdCtrl.init()))
     .on('/pdv',            () => rotaProtegida(pdvPage,           () => pdvCtrl.init()))
+    .on('/estoque',        () => rotaProtegida(stockPage,         () => stockCtrl.init()))
 
     .start();
 
