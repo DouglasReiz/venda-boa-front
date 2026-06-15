@@ -1,6 +1,6 @@
 /* ==========================================================================
-   pages/products.js — Manelito's
-   Contém: adminProductsPage, pdvPage
+   pages/products.js
+   Contém: adminProductsPage, pdvPage, stockPage
    ========================================================================== */
 
 
@@ -170,6 +170,36 @@ export function pdvPage() {
                 Cancelar
             </button>
         </div>
+    </div>
+    `;
+}
+
+
+/* ==========================================================================
+   stockPage — Visão geral e ajuste de estoque
+   ========================================================================== */
+
+export function stockPage() {
+    return `
+    <div class="page-centered" style="max-width: 860px;">
+
+        <!-- Alertas de estoque baixo -->
+        <div class="stock-alerts-bar" id="stock-alerts-bar" style="display:none;">
+            <span class="alert-icon">⚠️</span>
+            <span id="stock-alerts-text">Carregando alertas...</span>
+        </div>
+
+        <!-- Visão geral -->
+        <div class="glass-card">
+            <div class="admin-section-header">
+                <h2>Controle de Estoque</h2>
+            </div>
+
+            <div id="stock-list">
+                <p class="admin-list-loading">Carregando...</p>
+            </div>
+        </div>
+
     </div>
     `;
 }

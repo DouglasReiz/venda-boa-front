@@ -1,11 +1,11 @@
 export class Router {
-    #routes  = {};
+    #routes = {};
     #app;
-    #history = []; // pilha de rotas visitadas
+    #history = [];
 
     constructor() {
         this.#app = document.getElementById('app');
-        window.addEventListener('hashchange', () => this.#resolve());
+        // hashchange registrado APENAS no start() — evita duplo disparo
     }
 
     on(path, handler) {
@@ -17,15 +17,9 @@ export class Router {
         window.location.hash = path.startsWith('/') ? `#${path}` : `#/${path}`;
     }
 
-    /**
-     * Volta para a rota anterior na pilha.
-     * Se não houver histórico, vai para /dashboard.
-     */
     back() {
-        // Remove a rota atual da pilha
         this.#history.pop();
-
-        const anterior = this.#history.pop(); // pega a anterior
+        const anterior = this.#history.pop();
         this.navigate(anterior ?? '/dashboard');
     }
 
@@ -40,16 +34,23 @@ export class Router {
             return;
         }
 
-        // Empilha a rota atual (evita duplicatas consecutivas)
         const ultima = this.#history.at(-1);
         if (ultima !== path) this.#history.push(path);
 
-        const { html, onMount } = handler();
+        const result = handler();
+
+        // Garante que html e onMount existem
+        const html = result?.html ?? '';
+        const onMount = result?.onMount ?? null;
+
         this.#app.innerHTML = html;
+
+        // onMount executa APÓS o HTML ser inserido no DOM
         if (onMount) onMount();
     }
 
     start() {
+        // Registrado uma única vez aqui
         window.addEventListener('hashchange', () => this.#resolve());
 
         if (!window.location.hash) {

@@ -57,6 +57,10 @@ export function dashboardPage() {
                         <span class="dash-nav-icon">📦</span>
                         Gerenciar Produtos
                     </button>
+                    <button id="btn-ir-estoque" class="btn btn-neutral dash-nav-btn">
+                        <span class="dash-nav-icon">📊</span>
+                        Controle de Estoque
+                    </button>
                 </div>
             </div>
 
@@ -200,7 +204,7 @@ export function checkoutClosePage() {
  * @param {number} valorTotal  — valor já calculado pelo CheckoutPanelController
  */
 export function paymentPage(valorTotal = 0) {
-    const fmt   = (v) => parseFloat(v).toFixed(2);
+    const fmt = (v) => parseFloat(v).toFixed(2);
     const total = fmt(valorTotal);
 
     return `

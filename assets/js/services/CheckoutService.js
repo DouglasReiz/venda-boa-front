@@ -1,8 +1,9 @@
 export class CheckoutService {
     #api;
-    #movimentacoes   = [];
-    #valorVenda      = 0;
+    #movimentacoes = [];
+    #valorVenda = 0;
     #vendaFinalizada = false;
+    #itensCarrinho = [];
 
     constructor(api) {
         this.#api = api;
@@ -24,11 +25,14 @@ export class CheckoutService {
     // ── Estado da venda ───────────────────────────────────────────────────────
 
     setValorVenda(valor) { this.#valorVenda = valor; }
-    getValorVenda()      { return this.#valorVenda; }
+    getValorVenda() { return this.#valorVenda; }
+    setItensCarrinho(itens) { this.#itensCarrinho = itens; }
+    getItensCarrinho() { return this.#itensCarrinho; }
 
     resetarVenda() {
-        this.#movimentacoes  = [];
-        this.#valorVenda     = 0;
+        this.#movimentacoes = [];
+        this.#valorVenda = 0;
+        this.#itensCarrinho = [];
         this.#vendaFinalizada = true;
     }
 
@@ -46,7 +50,7 @@ export class CheckoutService {
         return this.#api.post('/checkout/launch', {
             tipo,
             valor,
-            descricao:        desc,
+            descricao: desc,
             metodo_pagamento: 'dinheiro',
         });
     }
@@ -83,6 +87,7 @@ export class CheckoutService {
             valor,
             metodo_pagamento: metodoPagamento,
             parcelas,
+            itens: this.#itensCarrinho, // envia para baixa automática de estoque
         });
     }
 }

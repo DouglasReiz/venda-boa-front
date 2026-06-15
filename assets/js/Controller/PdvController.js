@@ -114,7 +114,7 @@ export class PdvController extends BaseController {
 
     #abrirModalVariantes(produto) {
         const overlay = document.getElementById('modal-variantes');
-        const grid    = document.getElementById('modal-variantes-grid');
+        const grid = document.getElementById('modal-variantes-grid');
         if (!overlay || !grid) return;
 
         document.getElementById('modal-produto-nome').textContent = produto.nome;
@@ -171,19 +171,19 @@ export class PdvController extends BaseController {
      */
     #adicionarAoCarrinho(id, nome, preco, agrupar = true) {
         const chave = String(id);
-        const item  = agrupar ? this.#carrinho.find(i => i.id === chave) : null;
+        const item = agrupar ? this.#carrinho.find(i => i.id === chave) : null;
         if (item) {
             item.quantidade++;
         } else {
-            this.#carrinho.push({ id: chave, nome, preco, quantidade: 1 });
+            this.#carrinho.push({ id: chave, nome, preco, quantidade: 1, variantId: null });
         }
         this.#renderCarrinho();
     }
 
     #renderCarrinho() {
-        const lista      = document.getElementById('pdv-cart-list');
+        const lista = document.getElementById('pdv-cart-list');
         const btnFinalizar = document.getElementById('btn-pdv-finalizar');
-        const elTotal    = document.getElementById('pdv-total');
+        const elTotal = document.getElementById('pdv-total');
         if (!lista) return;
 
         if (this.#carrinho.length === 0) {
@@ -195,10 +195,10 @@ export class PdvController extends BaseController {
 
         lista.innerHTML = this.#carrinho.map(item => {
             const isNegativo = item.preco < 0;
-            const precoAbs   = Math.abs(item.preco);
-            const subtotal   = item.preco * item.quantidade;
-            const corClasse  = isNegativo ? 'negativo' : 'positivo';
-            const sinal      = isNegativo ? '−' : '+';
+            const precoAbs = Math.abs(item.preco);
+            const subtotal = item.preco * item.quantidade;
+            const corClasse = isNegativo ? 'negativo' : 'positivo';
+            const sinal = isNegativo ? '−' : '+';
 
             // Movimentações manuais (id começa com "manual-") não têm controles de qty
             const isManual = String(item.id).startsWith('manual-');
@@ -209,9 +209,9 @@ export class PdvController extends BaseController {
                     <span class="cart-item-nome ${isNegativo ? 'saida-label' : ''}">${item.nome}</span>
                     <span class="cart-item-preco ${corClasse}">
                         ${isManual
-                            ? `${sinal} R$ ${precoAbs.toFixed(2)}`
-                            : `${item.quantidade}x R$ ${precoAbs.toFixed(2)} = R$ ${Math.abs(subtotal).toFixed(2)}`
-                        }
+                    ? `${sinal} R$ ${precoAbs.toFixed(2)}`
+                    : `${item.quantidade}x R$ ${precoAbs.toFixed(2)} = R$ ${Math.abs(subtotal).toFixed(2)}`
+                }
                     </span>
                 </div>
                 <div class="cart-item-controls">
@@ -276,7 +276,7 @@ export class PdvController extends BaseController {
     }
 
     async #registrarMovimentacao(tipo) {
-        const valor     = parseFloat(document.getElementById('valor')?.value);
+        const valor = parseFloat(document.getElementById('valor')?.value);
         const descricao = document.getElementById('descricao')?.value?.trim() || 'Lançamento manual';
 
         if (!valor || valor <= 0) { alert('Informe um valor válido.'); return; }
@@ -297,7 +297,7 @@ export class PdvController extends BaseController {
             );
 
             // 3. Limpa os campos
-            document.getElementById('valor').value     = '';
+            document.getElementById('valor').value = '';
             document.getElementById('descricao').value = '';
 
             await this.#carregarHistorico();
@@ -347,7 +347,34 @@ export class PdvController extends BaseController {
         if (this.#carrinho.length === 0) return;
 
         const total = this.#calcularTotal();
+
+        // Salva os itens do carrinho para a API de estoque
+        // Apenas itens de produto (não manuais) geram baixa de estoque
+        const itens = this.#carrinho
+            .filter(i => !String(i.id).startsWith('manual-') && i.variantId)
+            .map(i => ({
+                variant_id: i.variantId,
+                quantidade: i.quantidade,
+                nome: i.nome,
+            }));
+
         this.#checkout.setValorVenda(total);
+        this.#checkout.setItensCarrinho(itens);
         window.router.navigate('/checkout/pagamento');
+    }
+
+    // ── Alertas de estoque no PDV ─────────────────────────────────────────────
+
+    async #verificarAlertas() {
+        try {
+            const alertas = await this.#products.getAlertas();
+            if (alertas.length === 0) return;
+
+            const bar = document.getElementById('pdv-stock-alert');
+            if (bar) {
+                bar.textContent = `⚠️ ${alertas.length} item(s) com estoque baixo`;
+                bar.style.display = 'block';
+            }
+        } catch (e) { /* silencioso — não bloqueia o PDV */ }
     }
 }

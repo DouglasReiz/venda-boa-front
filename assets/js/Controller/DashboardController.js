@@ -7,26 +7,28 @@ export class DashboardController extends BaseController {
     constructor(auth, caixaAdminService, graficoService) {
         super(auth);
         this.#caixaAdmin = caixaAdminService;
-        this.#grafico    = graficoService;
+        this.#grafico = graficoService;
     }
 
     async init() {
         this.montarNavbar();
-        try {
-            await this.#renderCaixas();
-            this.#bindBotoesFechamento();
-            this.#bindNavegacao();
-            await this.#renderGrafico();
-        } catch (error) {
-            console.error('Erro ao inicializar Dashboard:', error);
-        }
+
+        // Binds de navegação primeiro — não dependem de API
+        this.#bindNavegacao();
+
+        // Carregamentos assíncronos em paralelo — erro em um não bloqueia o outro
+        await Promise.allSettled([
+            this.#renderCaixas().then(() => this.#bindBotoesFechamento()),
+            this.#renderGrafico(),
+        ]);
     }
 
     #bindNavegacao() {
         const binds = [
-            { id: 'btn-ir-checkout',       rota: '/checkout/abrir'    }, // abre caixa → redireciona para /pdv
-            { id: 'btn-ir-pdv',            rota: '/checkout/abrir'    },
-            { id: 'btn-ir-admin-produtos', rota: '/admin/produtos'    },
+            { id: 'btn-ir-checkout', rota: '/checkout/abrir' }, // abre caixa → redireciona para /pdv
+            { id: 'btn-ir-pdv', rota: '/checkout/abrir' },
+            { id: 'btn-ir-admin-produtos', rota: '/admin/produtos' },
+            { id: 'btn-ir-estoque', rota: '/estoque' },
         ];
 
         binds.forEach(({ id, rota }) => {
@@ -91,22 +93,22 @@ export class DashboardController extends BaseController {
         if (!ctx) return;
 
         try {
-            const dados  = await this.#grafico.getHistoricoFechamentos();
-            const lista  = Array.isArray(dados) ? dados : [];
+            const dados = await this.#grafico.getHistoricoFechamentos();
+            const lista = Array.isArray(dados) ? dados : [];
 
             if (window.meuGraficoVendas) window.meuGraficoVendas.destroy();
 
             window.meuGraficoVendas = new Chart(ctx.getContext('2d'), {
                 type: 'line',
                 data: {
-                    labels:   lista.map(i => i.label),
+                    labels: lista.map(i => i.label),
                     datasets: [{
-                        label:           'Faturamento por Caixa (R$)',
-                        data:            lista.map(i => i.valor),
-                        borderColor:     '#48bb78',
+                        label: 'Faturamento por Caixa (R$)',
+                        data: lista.map(i => i.valor),
+                        borderColor: '#48bb78',
                         backgroundColor: 'rgba(72,187,120,0.1)',
-                        tension:         0.4,
-                        fill:            true,
+                        tension: 0.4,
+                        fill: true,
                     }]
                 },
                 options: {
