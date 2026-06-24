@@ -1,5 +1,4 @@
 import { BaseController } from './BaseController.js';
-import { renderBackButton } from '../components/BackButton.js';
 
 /**
  * PdvController — tela unificada do turno
@@ -27,8 +26,6 @@ export class PdvController extends BaseController {
     }
 
     async init() {
-        this.montarNavbar();
-        renderBackButton('Voltar ao Dashboard');
         this.#bindCarrinho();
         this.#bindMovimentacoes();
         this.#bindFechamento();

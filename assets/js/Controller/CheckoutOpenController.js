@@ -1,5 +1,4 @@
 import { BaseController } from './BaseController.js';
-import { renderBackButton } from '../components/BackButton.js';
 
 /**
  * CheckoutOpenController
@@ -18,7 +17,6 @@ export class CheckoutOpenController extends BaseController {
     }
 
     bindCheckoutOpen() {
-        renderBackButton('Voltar ao Dashboard');
         this.montarNavbar();
         const btnAbrir = document.getElementById('btn-abrir-caixa');
 

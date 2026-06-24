@@ -1,5 +1,4 @@
 import { BaseController } from './BaseController.js';
-import { renderBackButton } from '../components/BackButton.js';
 
 /**
  * StockController (frontend)
@@ -21,8 +20,6 @@ export class StockController extends BaseController {
     }
 
     async init() {
-        this.montarNavbar();
-        renderBackButton('Voltar ao Dashboard');
         await Promise.all([
             this.#carregarAlertas(),
             this.#carregarVisaoGeral(),

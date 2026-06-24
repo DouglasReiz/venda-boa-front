@@ -1,3 +1,12 @@
+/**
+ * Venda Boa PDV
+ * 
+ * @copyright Copyright (c) 2026 Douglas Alves
+ * @license PROPRIETÁRIA - TODOS OS DIREITOS RESERVADOS.
+ * É estritamente proibido copiar, modificar ou distribuir este arquivo 
+ * sem autorização expressa por escrito do autor.
+ */
+
 export class Router {
     #routes = {};
     #app;

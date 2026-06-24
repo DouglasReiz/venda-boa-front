@@ -1,5 +1,4 @@
 import { BaseController } from './BaseController.js';
-import { renderBackButton } from '../components/BackButton.js';
 
 /**
  * CheckoutCloseController
@@ -21,7 +20,6 @@ export class CheckoutCloseController extends BaseController {
     }
 
     async bindCheckoutClose() {
-        renderBackButton('Voltar ao Painel');
         this.montarNavbar();
         this.#bindCancelar();
         await this.#carregarResumo();

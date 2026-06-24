@@ -1,5 +1,4 @@
 import { BaseController } from './BaseController.js';
-import { renderBackButton } from '../components/BackButton.js';
 
 /**
  * CheckoutFinalizeController
@@ -20,7 +19,6 @@ export class CheckoutFinalizeController extends BaseController {
     }
 
     bindCheckoutFinalizacao(valorTotal) {
-        renderBackButton('Voltar ao Painel');
         this.montarNavbar();
         this.#valorTotal = parseFloat(valorTotal) || 0;
         this.#bindMetodos();

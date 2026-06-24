@@ -15,6 +15,7 @@ export function renderNavbar(auth, onLogout) {
     document.getElementById('app-navbar')?.remove();
 
     const name   = auth.getName();
+    const role   = auth.getUser()?.role ?? '';
     const initials = name
         .split(' ')
         .slice(0, 2)
@@ -39,6 +40,7 @@ export function renderNavbar(auth, onLogout) {
             <div class="navbar-dropdown" id="navbar-dropdown">
                 <div class="navbar-dropdown-header">
                     <strong>${name}</strong>
+                    <span class="navbar-role">${role}</span>
                     <span>${auth.getUser()?.email ?? ''}</span>
                 </div>
                 <div class="navbar-dropdown-divider"></div>

@@ -20,9 +20,17 @@ export function loginPage() {
    pages/dashboard.js
    ========================================================================== */
 
-export function dashboardPage() {
+/**
+ * @param {{ pode: Function }} auth
+ */
+export function dashboardPage(auth = null) {
+    const pode = (acao) => auth?.pode(acao) ?? false;
+    const isAdmin = pode('verDashboardAdmin');
+
     return `
     <div class="page-grid-2">
+
+        ${isAdmin ? `
         <div class="glass-card">
             <h2>Caixas Abertos</h2>
             <div id="lista-caixas-abertos"></div>
@@ -32,6 +40,15 @@ export function dashboardPage() {
             <h2>Performance de Vendas</h2>
             <canvas id="graficoVendas"></canvas>
         </div>
+        ` : `
+        <div class="glass-card" style="grid-column:1/-1;text-align:center;padding:40px;">
+            <p style="font-size:32px;margin-bottom:12px;">👋</p>
+            <h2>Olá, bem-vindo ao sistema!</h2>
+            <p style="color:rgba(255,255,255,0.5);margin-top:8px;font-size:14px;">
+                Use os botões abaixo para começar.
+            </p>
+        </div>
+        `}
 
         <!-- Navegação rápida -->
         <div class="dashboard-nav">
@@ -41,7 +58,7 @@ export function dashboardPage() {
                 <div class="dash-nav-group">
                     <button id="btn-ir-checkout" class="btn btn-primary dash-nav-btn">
                         <span class="dash-nav-icon">💰</span>
-                        Movimentações
+                        Abrir Caixa
                     </button>
                     <button id="btn-ir-pdv" class="btn btn-success dash-nav-btn">
                         <span class="dash-nav-icon">🛒</span>
@@ -50,19 +67,28 @@ export function dashboardPage() {
                 </div>
             </div>
 
+            ${pode('verGerenciarProdutos') || pode('verControleEstoque') || pode('verGerenciarUsuarios') ? `
             <div class="dash-nav-section">
                 <p class="dash-nav-label">Administração</p>
                 <div class="dash-nav-group">
+                    ${pode('verGerenciarProdutos') ? `
                     <button id="btn-ir-admin-produtos" class="btn btn-neutral dash-nav-btn">
                         <span class="dash-nav-icon">📦</span>
                         Gerenciar Produtos
-                    </button>
+                    </button>` : ''}
+                    ${pode('verControleEstoque') ? `
                     <button id="btn-ir-estoque" class="btn btn-neutral dash-nav-btn">
                         <span class="dash-nav-icon">📊</span>
                         Controle de Estoque
-                    </button>
+                    </button>` : ''}
+                    ${pode('verGerenciarUsuarios') ? `
+                    <button id="btn-ir-usuarios" class="btn btn-neutral dash-nav-btn">
+                        <span class="dash-nav-icon">👥</span>
+                        Gerenciar Usuários
+                    </button>` : ''}
                 </div>
             </div>
+            ` : ''}
 
         </div>
     </div>
@@ -204,7 +230,7 @@ export function checkoutClosePage() {
  * @param {number} valorTotal  — valor já calculado pelo CheckoutPanelController
  */
 export function paymentPage(valorTotal = 0) {
-    const fmt = (v) => parseFloat(v).toFixed(2);
+    const fmt   = (v) => parseFloat(v).toFixed(2);
     const total = fmt(valorTotal);
 
     return `
@@ -289,6 +315,34 @@ export function paymentPage(valorTotal = 0) {
                 </div>
 
             </div>
+        </div>
+    </div>
+    `;
+}
+
+
+/* ==========================================================================
+   trocarSenhaPage — Obrigatória no primeiro acesso
+   ========================================================================== */
+export function trocarSenhaPage() {
+    return `
+    <div class="page-centered">
+        <div class="card">
+            <div style="text-align:center; margin-bottom: 20px;">
+                <div style="font-size:40px; margin-bottom:8px;">🔐</div>
+                <h2>Defina sua nova senha</h2>
+                <p style="color:rgba(255,255,255,0.5); font-size:13px; margin-top:6px;">
+                    Por segurança, você precisa criar uma nova senha antes de continuar.
+                </p>
+            </div>
+
+            <input type="password" id="senha-atual"       placeholder="Senha atual (recebida por e-mail)">
+            <input type="password" id="nova-senha"        placeholder="Nova senha (mínimo 6 caracteres)">
+            <input type="password" id="nova-senha-confirm" placeholder="Confirme a nova senha">
+
+            <button id="btn-trocar-senha" class="btn btn-primary" style="margin-top: 8px;">
+                Salvar nova senha
+            </button>
         </div>
     </div>
     `;
