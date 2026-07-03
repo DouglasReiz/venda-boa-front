@@ -29,7 +29,7 @@ export class TrocarSenhaController extends BaseController {
         btn.textContent = 'Salvando...';
 
         try {
-            await this.#api.post('/auth/trocar-senha', {
+            await this.#api.post('/usuario/trocar-senha', {
                 senha_atual:             senhaAtual,
                 nova_senha:              novaSenha,
                 nova_senha_confirmation: confirmarSenha,
