@@ -97,7 +97,7 @@ router
     })
     .on('/trocar-senha',   () => ({
         html:    trocarSenhaPage(),
-        onMount: () => trocarSenhaCtrl.bindTrocarSenha(),
+        onMount: () => trocarSenhaCtrl.bind(),
     }))
 
     .on('/usuarios', () => {
