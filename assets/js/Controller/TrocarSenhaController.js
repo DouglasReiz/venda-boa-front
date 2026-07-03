@@ -16,7 +16,7 @@ export class TrocarSenhaController extends BaseController {
     async #trocar() {
         const senhaAtual     = document.getElementById('senha-atual')?.value;
         const novaSenha      = document.getElementById('nova-senha')?.value;
-        const confirmarSenha = document.getElementById('confirmar-senha')?.value;
+        const confirmarSenha = document.getElementById('nova-senha-confirm')?.value;
 
         if (!senhaAtual)          { alert('Informe a senha atual.'); return; }
         if (!novaSenha)           { alert('Informe a nova senha.'); return; }
