@@ -56,10 +56,6 @@ export function dashboardPage(auth = null) {
             <div class="dash-nav-section">
                 <p class="dash-nav-label">Caixa</p>
                 <div class="dash-nav-group">
-                    <button id="btn-ir-checkout" class="btn btn-primary dash-nav-btn">
-                        <span class="dash-nav-icon">💰</span>
-                        Abrir Caixa
-                    </button>
                     <button id="btn-ir-pdv" class="btn btn-success dash-nav-btn">
                         <span class="dash-nav-icon">🛒</span>
                         PDV — Iniciar Venda
