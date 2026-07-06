@@ -1,3 +1,4 @@
+
 import { BaseController } from './BaseController.js';
 
 export class DashboardController extends BaseController {
@@ -18,18 +19,18 @@ export class DashboardController extends BaseController {
 
         // Carregamentos assíncronos em paralelo — erro em um não bloqueia o outro
         await Promise.allSettled([
-            this.#renderCaixas().then(() => this.#bindBotoesFechamento()),
+            this.#renderCaixas().then(() => this.#bindBotoesCaixa()),
             this.#renderGrafico(),
         ]);
     }
 
     #bindNavegacao() {
         const binds = [
-            { id: 'btn-ir-checkout',       rota: '/checkout/abrir'    }, // abre caixa → redireciona para /pdv
-            { id: 'btn-ir-pdv',            rota: '/checkout/abrir'    },
-            { id: 'btn-ir-admin-produtos', rota: '/admin/produtos'    },
-            { id: 'btn-ir-estoque',        rota: '/estoque'           },
-            { id: 'btn-ir-usuarios',       rota: '/usuarios'          },
+            { id: 'btn-ir-checkout',       rota: '/checkout/abrir' },
+            { id: 'btn-ir-pdv',            rota: '/checkout/abrir' },
+            { id: 'btn-ir-admin-produtos', rota: '/admin/produtos' },
+            { id: 'btn-ir-estoque',        rota: '/estoque'        },
+            { id: 'btn-ir-usuarios',       rota: '/usuarios'       },
         ];
 
         binds.forEach(({ id, rota }) => {
@@ -58,10 +59,16 @@ export class DashboardController extends BaseController {
                             Operador: ${c.user?.name ?? 'Não identificado'}
                         </small>
                     </div>
-                    <button data-id="${c.id}" class="btn-fechar-admin btn btn-fechar"
-                        style="width:auto;padding:6px 14px;font-size:13px;">
-                        Fechar
-                    </button>
+                    <div style="display:flex;gap:8px;">
+                        <button data-id="${c.id}" class="btn-ver-caixa btn btn-neutral"
+                                style="width:auto;padding:6px 14px;font-size:13px;">
+                            Ver Caixa
+                        </button>
+                        <button data-id="${c.id}" class="btn-fechar-admin btn btn-fechar"
+                                style="width:auto;padding:6px 14px;font-size:13px;">
+                            Fechar
+                        </button>
+                    </div>
                 </div>
             `).join('');
         } catch {
@@ -69,11 +76,17 @@ export class DashboardController extends BaseController {
         }
     }
 
-    #bindBotoesFechamento() {
+    #bindBotoesCaixa() {
         document.querySelectorAll('.btn-fechar-admin').forEach(btn => {
             btn.addEventListener('click', e => {
                 const id = e.currentTarget.getAttribute('data-id');
                 this.#fecharCaixaAdmin(id);
+            });
+        });
+
+        document.querySelectorAll('.btn-ver-caixa').forEach(btn => {
+            btn.addEventListener('click', () => {
+                window.router.navigate('/checkout/fechar');
             });
         });
     }

@@ -58,7 +58,7 @@ export class AuthService {
             verGerenciarProdutos: ['admin_global', 'admin'],
             verControleEstoque:   ['admin_global', 'admin'],
             verGerenciarUsuarios: ['admin_global', 'admin'],
-            verDashboardAdmin:    ['admin_global', 'admin'],
+            verDashboardAdmin:    ['admin'],
             fecharCaixaAdmin:     ['admin_global', 'admin'],
             criarUsuario:         ['admin_global', 'admin'],
             gerenciarTenants:     ['admin_global'],
