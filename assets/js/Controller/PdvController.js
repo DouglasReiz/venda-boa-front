@@ -18,6 +18,8 @@ export class PdvController extends BaseController {
     #checkout;
     #catalogo = [];
     #carrinho = []; // [{ id, nome, preco, quantidade }]
+    #categoriaAtual = 'all';
+    #termoBusca = '';
 
     constructor(auth, productService, checkoutService) {
         super(auth);
@@ -26,9 +28,11 @@ export class PdvController extends BaseController {
     }
 
     async init() {
+        this.montarNavbar();
         this.#bindCarrinho();
         this.#bindMovimentacoes();
         this.#bindFechamento();
+        this.#bindBusca();
         await Promise.all([
             this.#carregarCatalogo(),
             this.#carregarHistorico(),
@@ -66,7 +70,8 @@ export class PdvController extends BaseController {
             if (!btn) return;
             bar.querySelectorAll('.pdv-cat-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            this.#renderGrade(btn.dataset.cat);
+            this.#categoriaAtual = btn.dataset.cat;   // NOVO
+            this.#renderGrade(this.#categoriaAtual);
         };
     }
 
@@ -74,12 +79,26 @@ export class PdvController extends BaseController {
         const grid = document.getElementById('pdv-grid');
         if (!grid) return;
 
-        const produtos = catFiltro === 'all'
+        let produtos = catFiltro === 'all'
             ? this.#catalogo.flatMap(c => c.products ?? [])
             : (this.#catalogo.find(c => c.id == catFiltro)?.products ?? []);
 
+        // NOVO — aplica filtro de busca por nome (e descrição, se existir)
+        if (this.#termoBusca) {
+            produtos = produtos.filter(p => {
+                const nome = (p.nome ?? '').toLowerCase();
+                const descricao = (p.descricao ?? '').toLowerCase();
+                const codigo = String(p.codigo ?? '').toLowerCase();   // NOVO
+                return nome.includes(this.#termoBusca)
+                    || descricao.includes(this.#termoBusca)
+                    || codigo.includes(this.#termoBusca);              // NOVO
+            });
+        }
+
         if (produtos.length === 0) {
-            grid.innerHTML = '<p class="pdv-empty">Nenhum produto nesta categoria.</p>';
+            grid.innerHTML = this.#termoBusca
+                ? `<p class="pdv-empty">Nenhum produto encontrado para "${this.#termoBusca}".</p>`
+                : '<p class="pdv-empty">Nenhum produto nesta categoria.</p>';
             return;
         }
 
@@ -260,6 +279,23 @@ export class PdvController extends BaseController {
         // Total absoluto para exibição (sem negativos), usado para o display
         const total = this.#calcularTotal();
         return total;
+    }
+
+    // ── Busca e filtros ─────────────────────────────────────────────────────
+
+    #bindBusca() {
+        const input = document.getElementById('pdv-busca');
+        if (!input) return;
+
+        let timeoutId;
+        input.addEventListener('input', () => {
+            clearTimeout(timeoutId);
+            // pequeno debounce para não re-renderizar a cada tecla
+            timeoutId = setTimeout(() => {
+                this.#termoBusca = input.value.trim().toLowerCase();
+                this.#renderGrade(this.#categoriaAtual);
+            }, 150);
+        });
     }
 
     // ── Movimentações manuais ─────────────────────────────────────────────────

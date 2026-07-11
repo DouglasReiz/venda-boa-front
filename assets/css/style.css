@@ -1155,6 +1155,7 @@ select option              { background: #1a202c; color: var(--color-text); }
 }
 
 .prod-name  { font-size: 14px; font-weight: 500; color: var(--color-text); }
+.prod-codigo { opacity:.6; font-size:.85em; margin-left:6px; }
 .prod-meta  { font-size: 12px; color: var(--color-text-subtle); }
 
 .admin-list-item-actions { display: flex; gap: 6px; flex-shrink: 0; }

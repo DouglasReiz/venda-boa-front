@@ -50,6 +50,7 @@ export function adminProductsPage() {
                     <option value="">Selecione a categoria</option>
                 </select>
                 <input type="text"   id="prod-nome"   placeholder="Nome do produto">
+                <input type="text"   id="prod-codigo" placeholder="Código (opcional)">
                 <input type="number" id="prod-preco"  placeholder="Preço (R$)" step="0.01" min="0.01">
                 <input type="text"   id="prod-descricao" placeholder="Descrição (opcional)">
 
@@ -95,6 +96,16 @@ export function pdvPage() {
 
         <!-- ── Coluna central: catálogo ── -->
         <div class="pdv-catalog">
+
+            <div class="pdv-search-bar">
+                <input
+                    type="text"
+                    id="pdv-busca"
+                    class="pdv-search-input"
+                    placeholder="Buscar produto..."
+                    autocomplete="off"
+                >
+            </div>
 
             <div class="pdv-categories" id="pdv-categories">
                 <button class="pdv-cat-btn active" data-cat="all">Todos</button>
