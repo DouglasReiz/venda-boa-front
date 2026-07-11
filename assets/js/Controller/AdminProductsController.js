@@ -11,8 +11,8 @@ import { BaseController } from './BaseController.js';
  */
 export class AdminProductsController extends BaseController {
     #products;
-    #categorias  = [];
-    #editCatId   = null; // id da categoria em edição (null = criação)
+    #categorias = [];
+    #editCatId = null; // id da categoria em edição (null = criação)
     #variantesTemp = []; // variantes pendentes antes de salvar o produto
 
     constructor(auth, productService) {
@@ -46,7 +46,7 @@ export class AdminProductsController extends BaseController {
     #abrirFormCategoria(cat = null) {
         this.#editCatId = cat?.id ?? null;
         document.getElementById('cat-nome').value = cat?.nome ?? '';
-        document.getElementById('cat-cor').value  = cat?.cor  ?? '#e8720c';
+        document.getElementById('cat-cor').value = cat?.cor ?? '#e8720c';
         this.#toggleForm('form-categoria', true);
     }
 
@@ -57,7 +57,7 @@ export class AdminProductsController extends BaseController {
 
     async #salvarCategoria() {
         const nome = document.getElementById('cat-nome').value.trim();
-        const cor  = document.getElementById('cat-cor').value;
+        const cor = document.getElementById('cat-cor').value;
         if (!nome) { alert('Informe o nome da categoria.'); return; }
 
         try {
@@ -149,10 +149,11 @@ export class AdminProductsController extends BaseController {
 
     #abrirFormProduto() {
         this.#variantesTemp = [];
-        document.getElementById('prod-categoria').value  = '';
-        document.getElementById('prod-nome').value       = '';
-        document.getElementById('prod-preco').value      = '';
-        document.getElementById('prod-descricao').value  = '';
+        document.getElementById('prod-categoria').value = '';
+        document.getElementById('prod-nome').value = '';
+        document.getElementById('prod-codigo').value = '';   // NOVO
+        document.getElementById('prod-preco').value = '';
+        document.getElementById('prod-descricao').value = '';
         document.getElementById('prod-tem-variantes').checked = false;
         document.getElementById('lista-variantes-form').innerHTML = '';
         this.#toggleForm('variantes-container', false);
@@ -166,19 +167,21 @@ export class AdminProductsController extends BaseController {
     }
 
     async #salvarProduto() {
-        const category_id   = document.getElementById('prod-categoria').value;
-        const nome          = document.getElementById('prod-nome').value.trim();
-        const preco         = parseFloat(document.getElementById('prod-preco').value);
-        const descricao     = document.getElementById('prod-descricao').value.trim();
+        const category_id = document.getElementById('prod-categoria').value;
+        const nome = document.getElementById('prod-nome').value.trim();
+        const codigo = document.getElementById('prod-codigo').value.trim();
+        const preco = parseFloat(document.getElementById('prod-preco').value);
+        const descricao = document.getElementById('prod-descricao').value.trim();
         const tem_variantes = document.getElementById('prod-tem-variantes').checked;
 
         if (!category_id) { alert('Selecione uma categoria.'); return; }
-        if (!nome)        { alert('Informe o nome do produto.'); return; }
+        if (!nome) { alert('Informe o nome do produto.'); return; }
         if (!preco || preco <= 0) { alert('Informe um preço válido.'); return; }
 
         const payload = {
             category_id,
             nome,
+            codigo: codigo || null,
             preco,
             descricao: descricao || null,
             tem_variantes,
@@ -206,7 +209,10 @@ export class AdminProductsController extends BaseController {
                 : produtos.map(p => `
                     <li class="admin-list-item">
                         <div class="admin-list-item-info">
-                            <span class="prod-name">${p.nome}</span>
+                            <span class="prod-name">
+                                ${p.nome}
+                                ${p.codigo ? `<span class="prod-codigo">#${p.codigo}</span>` : ''}
+                            </span>
                             <span class="prod-meta">
                                 ${p.category?.nome ?? '—'} •
                                 R$ ${parseFloat(p.preco).toFixed(2)}
@@ -260,7 +266,7 @@ export class AdminProductsController extends BaseController {
 
     #coletarVariantes() {
         return [...document.querySelectorAll('.variante-row')].map(row => ({
-            nome:  row.querySelector('.var-nome').value.trim(),
+            nome: row.querySelector('.var-nome').value.trim(),
             preco: parseFloat(row.querySelector('.var-preco').value),
         })).filter(v => v.nome && v.preco > 0);
     }
